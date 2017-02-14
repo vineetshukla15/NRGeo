@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -19,9 +20,17 @@ import nr.poc.geo.io.CSVUtil;
 
 public class Test {
 	public static void main(String[] args) throws ClientProtocolException, IOException {
-
-		String inputCSVFile = "E://NextTag//DeviceHomeLocations.csv";
-		String outPutCSVFile = "E://NextTag//DeviceHomeLocationsNew.csv";
+		
+		Scanner sc=new Scanner(System.in);  
+		
+		System.out.println("Enter Full path of CSV input file"); 
+		String inputCSVFile = sc.next();
+		
+		System.out.println("Enter Full path of new CSV output file with Address field"); 
+		String outPutCSVFile = sc.next();
+		
+		//String inputCSVFile = "E://NextTag//DeviceHomeLocations.csv";
+		//String outPutCSVFile = "E://NextTag//DeviceHomeLocationsNew.csv";
 
 		List<String> urlList = CSVUtil.readOpenCSV(inputCSVFile); // Full file
 																	// path
@@ -38,8 +47,10 @@ public class Test {
 		int count = 0;
 		for (String url : urlList) {
 			addressList.add(sendGeoApiRequest(url));
+		}		
+		if(outPutCSVFile!=null){
+			CSVUtil.writeNewCSVFile(inputCSVFile, outPutCSVFile, addressList);
 		}
-		CSVUtil.writeNewCSVFile(inputCSVFile, outPutCSVFile, addressList);
 	}
 
 	private static String sendGeoApiRequest(String URL) throws ClientProtocolException, IOException {

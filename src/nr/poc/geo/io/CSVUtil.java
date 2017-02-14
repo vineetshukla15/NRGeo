@@ -86,9 +86,14 @@ public class CSVUtil {
 	    String [] nextLine;
 	    String URL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=";
 		List<String> geoURLList = new ArrayList<String>();
+		int count =0;
 	    while ((nextLine = reader.readNext()) != null) {
-	        // nextLine[] is an array of values from the line
-	    	geoURLList.add(URL+nextLine[2]+","+nextLine[3]);
+	        // nextLine[] is an array of values from the line	    	
+	    	if(count>0){
+	    		//Skip header
+	    		geoURLList.add(URL+nextLine[2]+","+nextLine[3]);
+	    	}
+	    	count++;
 	    }
 	    
 	    return geoURLList;
