@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +11,6 @@ import java.util.List;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
-
 
 public class CSVUtil {
 
@@ -33,12 +31,12 @@ public class CSVUtil {
 			while ((line = br.readLine()) != null) {
 
 				// use comma as separator
-				if (count > 0) { //Skip header
+				if (count > 0) { // Skip header
 					String[] csvLine = line.split(cvsSplitBy);
-					latlong = csvLine[2] + "," + csvLine[3];				
+					latlong = csvLine[2] + "," + csvLine[3];
 					geoURLList.add(URL + latlong);
-				}else{
-					
+				} else {
+
 				}
 				count++;
 
@@ -59,43 +57,37 @@ public class CSVUtil {
 		}
 		return geoURLList;
 	}
-	
-	
-	public static void writeNewCSVFile(String inputFilePath,String outPutFilePath,List columnList) throws IOException  //assuming data is of type ArrayList here, you need to be more explicit when posting code
-	{
+
+	public static int writeNewCSVFile(String inputFilePath, String outPutFilePath, List columnList) throws IOException {
 		CSVReader reader = new CSVReader(new FileReader(inputFilePath));
 		CSVWriter writer = new CSVWriter(new FileWriter(outPutFilePath), ',');
 		String[] entries = null;
-		int count =0;
+		int count = 0;
 		while ((entries = reader.readNext()) != null) {
-		    ArrayList list = new ArrayList(Arrays.asList(entries));	
-		    if(count>4)
-		    list.add("Unknown"); 
-		    else{
-		    	list.add(columnList.get(count));
-		    }
-		    writer.writeNext((String[]) list.toArray(new String[list.size()]));
-		    count++;
+			ArrayList list = new ArrayList(Arrays.asList(entries));
+			list.add(columnList.get(count));
+			writer.writeNext((String[]) list.toArray(new String[list.size()]));
+			count++;
 		}
 		writer.close();
+		return count;
 	}
-	
-	
-	public static List readOpenCSV(String inputFile) throws IOException{
+
+	public static List<String> readOpenCSV(String inputFile) throws IOException {
 		CSVReader reader = new CSVReader(new FileReader(inputFile));
-	    String [] nextLine;
-	    String URL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=";
+		String[] nextLine;
+		String URL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=";
 		List<String> geoURLList = new ArrayList<String>();
-		int count =0;
-	    while ((nextLine = reader.readNext()) != null) {
-	        // nextLine[] is an array of values from the line	    	
-	    	if(count>0){
-	    		//Skip header
-	    		geoURLList.add(URL+nextLine[2]+","+nextLine[3]);
-	    	}
-	    	count++;
-	    }
-	    
-	    return geoURLList;
+		int count = 0;
+		while ((nextLine = reader.readNext()) != null) {
+			// nextLine[] is an array of values from the line
+			if (count > 0) {
+				// Skip header
+				geoURLList.add(URL + nextLine[2] + "," + nextLine[3]);
+			}
+			count++;
+		}
+
+		return geoURLList;
 	}
 }
